@@ -1,13 +1,28 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
+import { OpenAI } from "langchain";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 type Data = {
-  name: string
-}
+  r: string;
+};
 
-export default function handler(
+const model = new OpenAI({
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  temperature: 0.9,
+});
+
+const getOpenAi = async () => {
+  console.log("Running getOpenAi");
+  const res = await model.call(
+    "What would be a good company name a company that makes colorful socks?"
+  );
+  return res;
+};
+
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
-  res.status(200).json({ name: 'John Doe' })
+  const r = await getOpenAi();
+  res.status(200).json({ r });
 }
