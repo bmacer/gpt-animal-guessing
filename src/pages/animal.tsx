@@ -9,6 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { MongoChatMemory } from "./api/MongoChatMemory";
+import { MongoDocument } from "./api/mongo-document.type";
+import { Spacer } from "@chakra-ui/react";
 
 const generateRandomId = (): string => {
   const letters = "abcdefghijklmnopqrstuvwxyz";
@@ -33,25 +36,25 @@ const getUserId = (): string => {
   return userId;
 };
 
-const handleNewGame = (userid: string) => {
-  try {
-    axios.post("/api/animal/new", { userid }).then((response) => {
-      console.log(response.data);
-    });
-  } catch (error) {
-    console.error("Request failed:", error);
-  }
-};
-
 export default function Home() {
   const [name, setName] = useState("");
   const [guess, setGuess] = useState("");
   const [isNew, setIsNew] = useState(false);
   const [loading, setLoading] = useState(true);
   const [aiStatement, setAiStatement] = useState("");
-  const [fullHistory, setFullHistory] = useState([]);
+  const [fullHistory, setFullHistory] = useState<MongoDocument[]>([]);
   const [userid, setUserid] = useState("");
   const [guessButtonDisabled, setGuessButtonDisabled] = useState(false);
+
+  const handleNewGame = (userid: string) => {
+    try {
+      axios.post("/api/animal/new", { userid }).then((response) => {
+        console.log(response.data);
+      });
+    } catch (error) {
+      console.error("Request failed:", error);
+    }
+  };
 
   useEffect(() => {
     setUserid(getUserId());
@@ -87,7 +90,7 @@ export default function Home() {
 
   return (
     <VStack spacing={4} align="center">
-      <Text fontSize="4xl">I am a random animal. Can you guess what I am?</Text>
+      <Text fontSize="4xl">Guess the animal.  Powered by ChatGPT.</Text>
       {loading ? (
         <Box h="24" display="flex" justifyContent="center" alignItems="center">
           <Spinner />
@@ -97,38 +100,70 @@ export default function Home() {
           <Text fontSize="lg" fontWeight="bold">
             {name}
           </Text>
-          <Text>{aiStatement}</Text>
-          <Text>{isNew ? "new" : "cached"}</Text>
+
+          <Box h="80vh" overflowY="scroll">
+            {fullHistory.map((item, index) => (
+              <>
+                {/* <Text key={index}>{JSON.stringify(item)}</Text> */}
+                <Flex w="100vw">
+                  {item.messageType === "ai" && <Spacer />}
+                  <Text
+                    border="2px solid blue"
+                    w="50%"
+                    p="10px"
+                    bgColor="lightblue"
+                    borderRadius="10px"
+                    margin="20px"
+                  >
+                    {item.message}
+                  </Text>
+                  {item.messageType === "human" && <Spacer />}
+                </Flex>
+              </>
+            ))}
+          </Box>
           <Box>
             <Flex>
-              <Input type="text" onChange={(e) => setGuess(e.target.value)} />
-              {guessButtonDisabled ? (
-                <Spinner />
-              ) : (
-                <Button
-                  // colorScheme={guessButtonDisabled ? "gray" : "blue"}
-                  bgColor={guessButtonDisabled ? "red" : "blue"}
-                  onClick={() => {
+              <Input
+                onKeyUp={(e) => {
+                  if (e.key === "Enter") {
                     if (guessButtonDisabled) return;
                     setGuessButtonDisabled(true);
                     handleGuess(userid);
-                  }}
-                  disabled={guessButtonDisabled}
-                >
-                  Guess
-                </Button>
+                  }
+                }}
+                w="600px"
+                type="text"
+                onChange={(e) => setGuess(e.target.value)}
+              />
+              {guessButtonDisabled ? (
+                <Spinner />
+              ) : (
+                <>
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => {
+                      if (guessButtonDisabled) return;
+                      setGuessButtonDisabled(true);
+                      handleGuess(userid);
+                    }}
+                    disabled={guessButtonDisabled}
+                    ml="30px"
+                    mr="30px"
+                    w="200px"
+                  >
+                    Guess
+                  </Button>
+                  <Button
+                    colorScheme="blue"
+                    onClick={() => handleNewGame(userid)}
+                    w="200px"
+                  >
+                    New Game
+                  </Button>
+                </>
               )}
             </Flex>
-          </Box>
-          <Text>Your user ID: {userid}</Text>
-          <Button colorScheme="blue" onClick={() => handleNewGame(userid)}>
-            New Game
-          </Button>
-          <Box>
-            <Text>Full History</Text>
-            {fullHistory.map((item, index) => (
-              <Text key={index}>{JSON.stringify(item)}</Text>
-            ))}
           </Box>
         </>
       )}
