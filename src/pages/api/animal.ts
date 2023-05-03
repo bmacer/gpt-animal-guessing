@@ -18,30 +18,18 @@ import { Collection, MongoClient, MongoClientOptions } from "mongodb";
 import { getBufferString } from "langchain/memory";
 import { NextApiRequest, NextApiResponse } from "next";
 import { OutputValues } from "langchain/dist/memory/base";
+import { MONGO_URL } from "./CONST";
 
-async function getAllDocumentsByUserName(
+async function getAllDocumentsByUserid(
   client: MongoClient,
-  userName: string
+  userid: string
 ): Promise<any[]> {
   try {
     await client.connect();
     const database = client.db("myDatabase");
     const collection = database.collection("conversations");
-    const documents = await collection.find({ user: userName }).toArray();
+    const documents = await collection.find({ userid }).toArray();
     return documents;
-  } catch (error) {
-    console.error("Error occurred while fetching documents", error);
-    throw error;
-  }
-}
-
-async function deleteAllDocuments(client: MongoClient): Promise<void> {
-  try {
-    await client.connect();
-    const database = client.db("myDatabase");
-    const collection = database.collection("conversations");
-    const documents = await collection.deleteMany({});
-    console.log(`deleted ${documents.deletedCount}`);
   } catch (error) {
     console.error("Error occurred while fetching documents", error);
     throw error;
@@ -50,13 +38,11 @@ async function deleteAllDocuments(client: MongoClient): Promise<void> {
 
 type MongoDocument = {
   user: string;
+  userid: string;
   timestamp: number;
   messageType: "human" | "ai";
   message: string;
 };
-
-// const uri = `mongodb+srv://bobbysox322:${process.env.MONGO_DB_PASSWORD}@guessanimalcluster.pqmjp0i.mongodb.net/?retryWrites=true&w=majority`;
-const MONGO_URL = `mongodb+srv://bobbysox322:${process.env.MONGO_DB_PASSWORD}@guessanimalcluster.pqmjp0i.mongodb.net`;
 
 export class MongoChatMemory
   extends BaseChatMemory
@@ -68,15 +54,17 @@ export class MongoChatMemory
   returnMessages: boolean;
   client: MongoClient;
   user: string;
+  userid: string;
   history: MongoDocument[];
 
-  constructor(user: string) {
+  constructor(user: string, userid: string) {
     super();
     this.humanPrefix = "Human";
     this.aiPrefix = "AI";
     this.returnMessages = true;
     this.client = {} as MongoClient; // Assign a default value
     this.user = user;
+    this.userid = userid;
     this.history = [];
     this.memoryKey = "history";
     this.chatHistory = new ChatMessageHistory([]);
@@ -89,17 +77,32 @@ export class MongoChatMemory
       this.client = new MongoClient(MONGO_URL); // Assign the actual MongoClient instance
       await this.client.connect(); // Connect to the MongoDB client
 
-      const documents = await getAllDocumentsByUserName(this.client, this.user);
+      const documents = await getAllDocumentsByUserid(this.client, this.userid);
       this.history = documents;
-      this.chatHistory = new ChatMessageHistory(
-        documents.map((doc) => {
-          if (doc.messageType === "human") {
-            return new HumanChatMessage(doc.message);
-          } else {
-            return new AIChatMessage(doc.message);
-          }
-        })
-      );
+      console.log("documents");
+      console.log(documents);
+      console.log(documents.length);
+      if (documents.length === 0) {
+        console.log("okkkk");
+        this.chatHistory = new ChatMessageHistory([
+          new HumanChatMessage(
+            "Your responses should take the form: \
+          ISCORRECT: true/false ~~ \
+          NUMGUESSES: number of guesses ~~ \
+          {your response}"
+          ),
+        ]);
+      } else {
+        this.chatHistory = new ChatMessageHistory(
+          documents.map((doc) => {
+            if (doc.messageType === "human") {
+              return new HumanChatMessage(doc.message);
+            } else {
+              return new AIChatMessage(doc.message);
+            }
+          })
+        );
+      }
       console.log("\n\n\n\n\nthis.chatHistory");
       console.log(this.chatHistory);
       await this.client.close();
@@ -138,6 +141,7 @@ export class MongoChatMemory
       const collection = database.collection("conversations");
       const humanDoc: MongoDocument = {
         user: this.user,
+        userid: this.userid,
         timestamp: new Date().getTime(),
         messageType: "human",
         message: inputValues.input,
@@ -146,6 +150,7 @@ export class MongoChatMemory
 
       const aiDoc: MongoDocument = {
         user: this.user,
+        userid: this.userid,
         timestamp: new Date().getTime(),
         messageType: "ai",
         message: outputValues.response,
@@ -172,19 +177,17 @@ export default async function handler(
   res: NextApiResponse<{ r: string; fullHistory?: MongoDocument[] }>
 ) {
   console.log("Beginning handler...");
-  const { user, message } = req.body;
-  if (message === "delete") {
-    deleteAllDocuments(new MongoClient(MONGO_URL));
-    res.status(200).json({ r: "deletedeverything" });
-    return;
-  }
-  let mongoMemory = await new MongoChatMemory(user);
+  const { user, message, userid } = req.body;
+  let mongoMemory = await new MongoChatMemory(user, userid);
+  console.log("Pulling memory from mongo...");
   await mongoMemory.pullMemoryFromMongo();
 
   const chatPrompt = ChatPromptTemplate.fromPromptMessages([
     SystemMessagePromptTemplate.fromTemplate(
-      "You are the facilitator of an animal-guessing game.  You will take 3 guesses, one at a time, giving a clue \
-       after each incorrect guess.  After 3 incorrect guesses, you reveal the animal you ranomly chose."
+      "You are the facilitator of an animal-guessing game.  \
+      You randomly pick an animal which you will pretend to be, and which the user will try to guess. \
+        You will take 3 guesses, one at a time, giving a clue \
+       after each incorrect guess.  After 3 incorrect guesses, you reveal the animal you randomly chose."
     ),
     new MessagesPlaceholder("history"),
     HumanMessagePromptTemplate.fromTemplate("{input}"),
@@ -192,7 +195,7 @@ export default async function handler(
 
   const chat = new ChatOpenAI({
     openAIApiKey: process.env.OPENAI_API_KEY,
-    temperature: 0.9,
+    temperature: 0.3,
   });
 
   const c = new ConversationChain({
