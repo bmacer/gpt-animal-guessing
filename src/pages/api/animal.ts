@@ -12,7 +12,7 @@ import { MongoDocument } from "./mongo-document.type";
 
 export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<{ r: string; fullHistory?: MongoDocument[] }>
+  res: NextApiResponse<{ r: string; fullHistory?: MongoDocument }>
 ) {
   console.log("Beginning handler...");
   const { user, message, userid } = req.body;
@@ -45,7 +45,10 @@ export default async function handler(
   const r3 = await c.call({
     input: message,
   });
-  res.status(200).json({ r: r3.response, fullHistory: mongoMemory.history });
+  res.status(200).json({
+    r: r3.response,
+    fullHistory: mongoMemory.history[mongoMemory.history.length - 1],
+  });
 
   // c.memory?.saveContext({ input: message }, { output: r3.response });
 }

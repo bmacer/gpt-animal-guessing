@@ -42,15 +42,7 @@ export class MongoChatMemory
       const documents = await getAllDocumentsByUserid(this.client, this.userid);
       this.history = documents;
       if (documents.length === 0) {
-        console.log("okkkk");
-        this.chatHistory = new ChatMessageHistory([
-          new HumanChatMessage(
-            "Your responses should take the form: \
-          ISCORRECT: true/false ~~ \
-          NUMGUESSES: number of guesses ~~ \
-          {your response}"
-          ),
-        ]);
+        this.chatHistory = new ChatMessageHistory([]);
       } else {
         this.chatHistory = new ChatMessageHistory(
           documents.map((doc) => {

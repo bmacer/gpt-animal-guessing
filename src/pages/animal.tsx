@@ -37,6 +37,12 @@ const getUserId = (): string => {
 };
 
 export default function Home() {
+  const initialMessage: MongoDocument = {
+    userid: "placeholder",
+    timestamp: new Date().getDate(),
+    message: "I'm an animal.  Can you guess what I am?  Or just chat. :-)",
+    messageType: "ai",
+  };
   const [name, setName] = useState("");
   const [guess, setGuess] = useState("");
   const [isNew, setIsNew] = useState(false);
@@ -44,12 +50,7 @@ export default function Home() {
   const [aiStatement, setAiStatement] = useState("");
   const [userid, setUserid] = useState("");
   const [fullHistory, setFullHistory] = useState<MongoDocument[]>([
-    {
-      userid,
-      timestamp: new Date().getDate(),
-      message: "I'm an animal.  Can you guess what I am?  Or just chat. :-)",
-      messageType: "ai",
-    },
+    initialMessage,
   ]);
   const [guessButtonDisabled, setGuessButtonDisabled] = useState(false);
 
@@ -62,6 +63,10 @@ export default function Home() {
 
   const handleNewGame = (userid: string) => {
     try {
+      setFullHistory([]);
+      setTimeout(() => {
+        setFullHistory([initialMessage]);
+      }, 1000);
       axios.post("/api/animal/new", { userid }).then((response) => {
         console.log(response.data);
       });
@@ -96,7 +101,17 @@ export default function Home() {
       axios.post("/api/animal", data).then((response) => {
         console.log(response.data);
         setAiStatement(response.data.r);
-        response.data.fullHistory && setFullHistory(response.data.fullHistory);
+        response.data.fullHistory &&
+          setFullHistory([
+            ...fullHistory,
+            {
+              userid,
+              timestamp: new Date().getDate(),
+              message: guess,
+              messageType: "human",
+            },
+            response.data.fullHistory,
+          ]);
       });
     } catch (error) {
       console.error("Request failed:", error);
@@ -115,11 +130,14 @@ export default function Home() {
 
   return (
     <Box
-      w="100vw"
-      h="100vh"
+      w="90vw"
+      h="90vh"
+      bgColor="pink"
+      borderRadius="10px"
       overscrollBehavior="none"
       overflow="auto"
-      m="0"
+      m="auto"
+      mt="1vh"
       p="0"
     >
       <VStack spacing={4} align="center">
@@ -127,7 +145,7 @@ export default function Home() {
           textAlign="center"
           w="100vw"
           bgColor="#E6ADAD"
-          h="8vh"
+          h="6vh"
           p="20px"
           fontSize="2xl"
           fontFamily="Arial"
@@ -136,11 +154,11 @@ export default function Home() {
           Animal Guessing Game
         </Text>
 
-        <Box h="75vh" overflowY="scroll" ref={scrollContainerRef}>
+        <Box h="70vh" overflowY="scroll" ref={scrollContainerRef}>
           {fullHistory.map((item, index) => (
             <Flex
               key={index}
-              w="100%"
+              w="70vw"
               justify={item.messageType === "ai" ? "flex-end" : "flex-start"}
             >
               {item.messageType === "ai" && <Spacer />}
@@ -148,7 +166,11 @@ export default function Home() {
                 w="50%"
                 p="10px"
                 bgColor={item.messageType === "ai" ? "lightblue" : "lightgray"}
-                borderRadius="10px"
+                borderRadius={
+                  item.messageType === "ai"
+                    ? "10px 10px 0px 10px"
+                    : "10px 10px 10px 0px"
+                }
                 margin="20px"
               >
                 {item.message}
@@ -159,7 +181,7 @@ export default function Home() {
           <div ref={bottomRef}></div>
         </Box>
 
-        <Box h="10vh">
+        <Box h="5vh">
           <HStack>
             <Input
               onKeyUp={(e) => {
