@@ -114,7 +114,14 @@ export default function Home() {
   }, []);
 
   return (
-    <Box w="100vw" h="100vh" overscrollBehavior="none">
+    <Box
+      w="100vw"
+      h="100vh"
+      overscrollBehavior="none"
+      overflow="auto"
+      m="0"
+      p="0"
+    >
       <VStack spacing={4} align="center">
         <Text
           textAlign="center"
@@ -122,14 +129,14 @@ export default function Home() {
           bgColor="#E6ADAD"
           h="8vh"
           p="20px"
-          fontSize="4xl"
+          fontSize="2xl"
           fontFamily="Arial"
           color="blue.500"
         >
           Animal Guessing Game
         </Text>
 
-        <Box h="80vh" overflowY="scroll" ref={scrollContainerRef}>
+        <Box h="75vh" overflowY="scroll" ref={scrollContainerRef}>
           {fullHistory.map((item, index) => (
             <Flex
               key={index}
