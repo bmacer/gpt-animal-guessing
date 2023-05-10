@@ -1,6 +1,4 @@
-import { MongoClient } from "mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
-import { MONGO_URL } from "../CONST";
 import { deleteDocumentsByUserid } from "../util";
 
 export default async function handler(
