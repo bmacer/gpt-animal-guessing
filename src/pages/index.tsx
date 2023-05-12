@@ -47,10 +47,13 @@ export default function Home() {
           ChatGPT Prompts
         </Text>
         <MyLink href="https://www.youtube.com/clip/UgkxIGl-RHF4yWT3reFoRLhshRzgQOKqOcBC">
-          1. Notorious BIG
+          1. Notorious BIG raps NY State of Mind
+        </MyLink>
+        <MyLink href="https://youtube.com/clip/UgkxDP5SwJVymjYsycvuYCsUUI1JkhpjX50w">
+          2. Freddie Mercury sings Thriller
         </MyLink>
         <MyLink href="https://www.youtube.com/watch?v=YuOBzWF0Aws">
-          2. If Google was a Guy
+          3. If Google was a Guy
         </MyLink>
       </Box>
     </>
