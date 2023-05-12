@@ -28,8 +28,8 @@ const All = () => {
   }, []);
   return (
     <Box>
-      {everything?.everything?.map((e: any) => {
-        return <Text>Somebody said: {e.message}</Text>;
+      {everything?.everything?.map((e: any, index: number) => {
+        return <Text key={index}>Somebody said: {e.message}</Text>;
       })}
     </Box>
   );
