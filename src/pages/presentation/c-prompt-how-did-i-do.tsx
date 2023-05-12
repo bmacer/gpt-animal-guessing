@@ -3,7 +3,7 @@ import { MyLink } from "..";
 
 const Scoring = () => {
   const statement = `i did a presentation about ChatGPT and asked for feedback.
-Can you summarize the feedback for me, with bullet points about the top 3 highlights?
+Can you summarize the feedback for me, with bullet points about the top 3 highlights?  Also, give my presentation a score from 1-100.
 
 here are there responses:
 `;
