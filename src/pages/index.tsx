@@ -71,9 +71,7 @@ export default function Home() {
         <MyLink href="https://www.youtube.com/watch?v=2xxziIWmaSA">
           3. Langchain
         </MyLink>
-        <MyLink href="mailto:bmacer@cisco.com">
-          4. Email me (or ping me on Webex) bmacer@cisco.com
-        </MyLink>
+        <Text>4. Email me (or ping me on Webex) bmacer@cisco.com</Text>
       </Box>
     </>
   );
