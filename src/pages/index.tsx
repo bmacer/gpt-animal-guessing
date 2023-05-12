@@ -61,6 +61,19 @@ export default function Home() {
         <MyLink href="https://www.youtube.com/watch?v=YuOBzWF0Aws">
           3. If Google was a Guy
         </MyLink>
+        <Text as="h1" fontSize="50px">
+          Additional Resources
+        </Text>
+        <MyLink href="https://www.bensbites.co/">1. Ben's Bites</MyLink>
+        <MyLink href="https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers">
+          2. Prompt Engineering Course
+        </MyLink>
+        <MyLink href="https://www.youtube.com/watch?v=2xxziIWmaSA">
+          3. Langchain
+        </MyLink>
+        <MyLink href="mailto:bmacer@cisco.com">
+          4. Email me (or ping me on Webex) bmacer@cisco.com
+        </MyLink>
       </Box>
     </>
   );
