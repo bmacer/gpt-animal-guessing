@@ -18,7 +18,7 @@ export const MyLink = ({ href, children }: MyLinkProps) => {
 export default function Home() {
   return (
     <>
-      <Flex h="10vh" m="auto" justifyContent='center'>
+      <Flex h="10vh" m="auto" justifyContent="center">
         <Text fontSize="50px">https://gpt-animal-guessing.vercel.app/</Text>
       </Flex>
       <Image
@@ -50,6 +50,17 @@ export default function Home() {
         </MyLink>
         <MyLink href="/presentation/b-prompt-organize-classroom">
           2. Second Prompt - People I Know
+        </MyLink>
+      </Box>
+      <Box w="90vw" h="90vh" bgColor="lightgrey" m="auto" textAlign="center">
+        <Text as="h1" fontSize="50px">
+          Videos
+        </Text>
+        <MyLink href="https://www.youtube.com/clip/UgkxIGl-RHF4yWT3reFoRLhshRzgQOKqOcBC">
+          1. Notorious BIG
+        </MyLink>
+        <MyLink href="https://www.youtube.com/watch?v=YuOBzWF0Aws">
+          2. If Google was a Guy
         </MyLink>
       </Box>
     </>
