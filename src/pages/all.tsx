@@ -20,7 +20,7 @@ export async function getAllHumanGuesses(): Promise<any[]> {
 }
 
 const All = () => {
-  const [everything, setEverything] = useState<any[]>([]);
+  const [everything, setEverything] = useState<any>([]);
   useEffect(() => {
     axios.get("/api/animal/all").then((res) => {
       setEverything(res.data);
