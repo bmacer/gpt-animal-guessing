@@ -50,7 +50,7 @@ export default function Home() {
           3. Third Prompt - How did I do?
         </MyLink>
         <Text as="h1" fontSize="50px">
-          ChatGPT Prompts
+          Video Links
         </Text>
         <MyLink href="https://www.youtube.com/clip/UgkxIGl-RHF4yWT3reFoRLhshRzgQOKqOcBC">
           1. Notorious BIG raps NY State of Mind
@@ -64,7 +64,7 @@ export default function Home() {
         <Text as="h1" fontSize="50px">
           Additional Resources
         </Text>
-        <MyLink href="https://www.bensbites.co/">1. Ben's Bites</MyLink>
+        <MyLink href="https://www.bensbites.co/">1. Bens Bites</MyLink>
         <MyLink href="https://www.deeplearning.ai/short-courses/chatgpt-prompt-engineering-for-developers">
           2. Prompt Engineering Course
         </MyLink>
