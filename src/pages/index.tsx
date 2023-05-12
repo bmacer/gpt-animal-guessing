@@ -43,10 +43,8 @@ export default function Home() {
         <MyLink href="/presentation/b-prompt-organize-classroom">
           2. Second Prompt - People I Know
         </MyLink>
-      </Box>
-      <Box w="90vw" h="90vh" bgColor="lightgrey" m="auto" textAlign="center">
         <Text as="h1" fontSize="50px">
-          Videos
+          ChatGPT Prompts
         </Text>
         <MyLink href="https://www.youtube.com/clip/UgkxIGl-RHF4yWT3reFoRLhshRzgQOKqOcBC">
           1. Notorious BIG
