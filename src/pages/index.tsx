@@ -59,7 +59,7 @@ export default function Home() {
           2. Freddie Mercury sings Thriller
         </MyLink>
         <MyLink href="https://www.youtube.com/watch?v=YuOBzWF0Aws">
-          3. If Google was a Guy
+          3. If Google was a Guy...
         </MyLink>
         <Text as="h1" fontSize="50px">
           Additional Resources
