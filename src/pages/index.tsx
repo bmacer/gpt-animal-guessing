@@ -31,7 +31,10 @@ export default function Home() {
         <MyLink href="https://forms.gle/5pCSGcNSZiNuRrmG9">
           2. Who do I know? [Google Form]
         </MyLink>
-        <MyLink href="https://chat.openai.com">3. Link to ChatGPT</MyLink>
+        <MyLink href="https://forms.gle/GALZZfh4XcdMtyTY9">
+          3. How did I do? [Google Form]
+        </MyLink>
+        <MyLink href="https://chat.openai.com">4. Link to ChatGPT</MyLink>
       </Box>
       <Box w="90vw" h="90vh" bgColor="lightgrey" m="auto" textAlign="center">
         <Text as="h1" fontSize="50px">
@@ -42,6 +45,9 @@ export default function Home() {
         </MyLink>
         <MyLink href="/presentation/b-prompt-organize-classroom">
           2. Second Prompt - People I Know
+        </MyLink>
+        <MyLink href="/presentation/c-prompt-how-did-i-do">
+          3. Third Prompt - How did I do?
         </MyLink>
         <Text as="h1" fontSize="50px">
           ChatGPT Prompts
