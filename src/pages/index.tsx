@@ -19,16 +19,8 @@ export default function Home() {
   return (
     <>
       <Flex h="10vh" m="auto" justifyContent="center">
-        <Text fontSize="50px">https://gpt-animal-guessing.vercel.app/</Text>
+        <Text fontSize="50px">https://bmacer.vercel.app/</Text>
       </Flex>
-      <Image
-        position="absolute"
-        top="10px"
-        right="10px"
-        src="/qr-code.png"
-        w="200px"
-        h="200px"
-      />
       <Box w="90vw" bgColor="lightgrey" m="auto" textAlign="center">
         <Text as="h1" fontSize="50px">
           ChatGPT follow-along
