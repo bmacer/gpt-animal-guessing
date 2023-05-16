@@ -35,6 +35,9 @@ export default function Home() {
           3. How did I do? [Google Form]
         </MyLink>
         <MyLink href="https://chat.openai.com">4. Link to ChatGPT</MyLink>
+        <MyLink href="https://cisco-my.sharepoint.com/:p:/p/bmacer/ERvnm8b0G89LoAmdv5VqdDQBhoY4Eo_EY5uEq6b6tX6-RQ?e=3fNTxD">
+          5. This Presentation
+        </MyLink>
       </Box>
       <Box w="90vw" h="90vh" bgColor="lightgrey" m="auto" textAlign="center">
         <Text as="h1" fontSize="50px">
